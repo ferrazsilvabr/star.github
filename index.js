@@ -1,13 +1,16 @@
 const express = require('express');
 const app = express();
+const talkedRecently = new Set();
 app.get("/", (request, response) => {
   const ping = new Date();
   ping.setHours(ping.getHours() - 3);
   console.log(`Ping recebido às ${ping.getUTCHours()}:${ping.getUTCMinutes()}:${ping.getUTCSeconds()}`);
   response.sendStatus(200);
 });
+ 
 app.listen(process.env.PORT); // Recebe solicitações que o deixa online
 const mongoose = require("mongoose");
+require("snekfetch")
 mongoose.connect('mongodb+srv://stardb:stardb2020@cluster0-avxy3.mongodb.net/<dbname>?retryWrites=true&w=majority', { 
   
   useNewUrlParser: true,
@@ -23,20 +26,64 @@ const bldb = require("./blacklist.js");
 const Discord = require("discord.js"); //Conexão com a livraria Discord.js
 const client = new Discord.Client(); //Criação de um novo Client
 const config = require("./config.json"); //Pegando o prefixo do bot para respostas de comandos
-
+const db = require("quick.db")
+const { dprefix } = require("./config.json")
+const ytdl = require('ytdl-core');
 client.on('message', message => {
+  let prefix = db.get(`prefixo_${message.guild.id}`)
+  if (prefix == null) prefix = dprefix
      if (message.author.bot) return;
      if (message.channel.type == 'dm') return;
-     if (!message.content.toLowerCase().startsWith(config.prefix)) return;
-     if (message.content.startsWith(`<@!${client.user.id}>`) || message.content.startsWith(`<@${client.user.id}>`)) return;
+     if (!message.content.toLowerCase().startsWith(config.dprefix)) return;
+      if (
+     message.content.startsWith(`<@!${client.user.id}>`) ||
+     message.content.startsWith(`<@${client.user.id}>`)
+  ) {
+    return message
+      .reply("Olá, caso precise de ajuda meu prefixo é `s!`")
+      ;
+  }
+
+client.on('message', message => {
+	if (message.content.startsWith === `<@!${client.user.id}>`) {
+	message.channel.send("Oi");
+	}
+});
+
+client.on('message', message => {
+	if (message.content.startsWith === `<@${client.user.id}>`) {
+	message.channel.send("Oi");
+	}
+});
+
+client.on('message', message => {
+	if (message.content === '@everyone') {
+		const emoji = client.emojis.cache.get(config.emojiID);
+	message.react(emoji);
+	}
+});
+client.on('message', message => {
+	if (message.content === '@here') {
+		const emoji = client.emojis.cache.get(config.emojiID);
+	message.react(emoji);
+	}
+});
+
+if (talkedRecently.has(message.author.id))
+  return;
+// Adds the user to the set so that they can't talk for 2.5 seconds
+talkedRecently.add(message.author.id);
+setTimeout(() => {
+  // Removes the user from the set after 2.5 seconds
+  talkedRecently.delete(message.author.id);
+}, 2500);
 
     const args = message.content
-        .trim().slice(config.prefix.length)
+        .trim().slice(prefix.length)
         .split(/ +/g);
     const command = args.shift().toLowerCase();
 
 
-    try {
                 bldb.findOne({_id:message.author.id}, (err, bl) => {
     if(bl) {
       const detectado = new Discord.MessageEmbed()
@@ -45,16 +92,15 @@ client.on('message', message => {
       .setDescription("Sistema de blacklist")
       return message.channel.send(detectado)
     } else {
-  
+      try {
         const commandFile = require(`./comandos/${command}`)
         commandFile.run(client, message, args);
+            } catch (err) {
+      return;
+  }
                 }
                 })
-    } catch (err) {
-    console.error('Erro:' + err);
-  }
 });
-
 
 // Star Dreams
 client.on("guildMemberAdd", async (member) => { 
@@ -84,51 +130,6 @@ client.on("guildMemberRemove", async (member) => {
 
   let guild = await client.guilds.cache.get("721849277562749049");
   let channel = await client.channels.cache.get("722761794137096202");
-  let emoji = await member.guild.emojis.cache.find(emoji => emoji.name === "nomedoemoji");
-  if (guild != member.guild) {
-    return console.log("Algum saco pela saiu do servidor. Mas não é nesse, então tá tudo bem :)");
-   } else {
-      let embed = await new Discord.MessageEmbed()
-      .setColor("#7c2ae8")
-      .setAuthor(member.user.tag, member.user.displayAvatarURL())
-      .setTitle(`<a:2184_wumpus_color_gif:720298050916057159> Adeus! <a:2184_wumpus_color_gif:720298050916057159>`)
-      .setImage("https://i.imgur.com/pqlOncV.gif")
-      .setDescription(`**${member.user.username}**, saiu do servidor! :broken_heart:`)
-      .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-      .setFooter("Até Logo!")
-      .setTimestamp();
-
-    channel.send(embed);
-  }
-});
-// Snoway
-client.on("guildMemberAdd", async (member) => { 
-
-  let guild = await client.guilds.cache.get("724030656677544007");
-  let channel = await client.channels.cache.get("724031551435833444");
-  let emoji = await member.guild.emojis.cache.find(emoji => emoji.name === "nomedoemoji");
-  if (guild != member.guild) {
-    return console.log("Sem boas-vindas pra você! Sai daqui saco pela.");
-   } else {
-      let embed = await new Discord.MessageEmbed()
-      .setColor("#7c2ae8")
-      .setAuthor(member.user.tag, member.user.displayAvatarURL())
-      .setTitle(`<a:2184_wumpus_color_gif:720298050916057159> Bem-vindo(a) <a:2184_wumpus_color_gif:720298050916057159>`)
-      .setImage("https://i.imgur.com/pqlOncV.gif")
-      .setDescription(`**${member.user}**, bem-vindo(a) ao servidor **${guild.name}**! Atualmente estamos com **${member.guild.memberCount} membros**, divirta-se conosco! :heart:`)
-      .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }))
-      .setFooter("Bem Vindo!")
-      .setTimestamp();
-      member.roles.add("724038922224795740");
-
-    channel.send(embed);
-  }
-});
-
-client.on("guildMemberRemove", async (member) => { 
-
-  let guild = await client.guilds.cache.get("724030656677544007");
-  let channel = await client.channels.cache.get("724031552182288484");
   let emoji = await member.guild.emojis.cache.find(emoji => emoji.name === "nomedoemoji");
   if (guild != member.guild) {
     return console.log("Algum saco pela saiu do servidor. Mas não é nesse, então tá tudo bem :)");
@@ -220,7 +221,7 @@ client.on("message", async message => { // Se o seu for "bot.on" só modificar.
 
 client.on("ready", () => {
   let activities = [
-      `Utilize ${config.prefix}help para ver meus comandos ^^`,
+      `Utilize ${config.dprefix}help para ver meus comandos ^^`,
       `Estou em: ${client.guilds.cache.size} servidores lindos ❤️!`,
       `Monitorando: ${client.channels.cache.size} canais!`,
       `Conheço: ${client.users.cache.size} pessoinhas diferentes! ^^`
@@ -236,4 +237,4 @@ client.on("ready", () => {
 console.log("Estou Online!")
 });
 
-client.login(process.env.TOKEN); //Ligando o Bot caso ele consiga acessar o token
+client.login('NzE5NTI0MTE0NTM2MzMzMzQy.Xt4vwA.Z5rpvBUYs2l0dK8VM6ry0utlylw'); //Ligando o Bot caso ele consiga acessar o token

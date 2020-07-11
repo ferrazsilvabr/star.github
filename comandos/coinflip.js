@@ -1,17 +1,18 @@
-exports.run = async (bot, message, args) => {
-    var coin = Math.floor(Math.random() * 20);
-    var coin_string = '';
+const Discord = require("discord.js")
 
-    if (coin % 3 === 0)
-        coin_string += "**cara**";
-    else
-        coin_string += "**coroa**";
+exports.run = async (client, message, args) => {
+  var array1 = ["cara", "coroa"];
 
-    return message.channel.send(`<@${message.author.id}> jogou a moeda e caiu em ${coin_string}`);
-}
+  var rand = Math.floor(Math.random() * array1.length);
 
-exports.help = {
-    name: 'coinflip',
-    aliases: ['flipcoin'],
-    descr: 'Joga uma moeda para cima e exibe o resultado.'
-}
+  if (!args[0] || (args[0].toLowerCase() !== "cara" && args[0].toLowerCase() !== "coroa")) {
+    message.reply("insira `cara` ou `coroa` na frente do comando.");
+  } 
+else if (args[0].toLowerCase() == array1[rand]) {
+    message.channel.send("Deu `" + array1[rand] + "`, você ganhou dessa vez!");
+  } 
+else if (args[0].toLowerCase() != array1[rand]) {
+    message.channel.send("Deu `" + array1[rand] + "`, você perdeu dessa vez!"
+    );
+  }
+};

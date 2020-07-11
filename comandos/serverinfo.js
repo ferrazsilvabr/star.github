@@ -16,7 +16,27 @@ module.exports = {
     const joined = message.member.joinedAt
 
     const region = {
-      brazil: ':flag_br: Brazil'
+      brazil: ':flag_br: Brazil',
+      europe: 'Europa',
+      hongkong: 'Hong Kong',
+      india: 'Índia',
+      japan: 'Japão',
+      russia: 'Rússia',
+      singapore: 'Singapore',
+      southafrica: 'Africa do Sul',
+      sydney: 'sydney',
+      uscentral: 'US Central',
+      useast: 'US East',
+      ussouth: 'US Sul',
+      uswest: 'US West'
+    }
+
+    const verificationLevel = {
+      none: 'Nenhuma',
+      low: 'Baixa',
+      medium: 'Média',
+      high: 'Alta',
+      taller: 'Mais Alta!'
     }
 
     const embed = new Discord.MessageEmbed()
@@ -27,10 +47,11 @@ module.exports = {
       .addField('**<:certified:556682763814699008> ID:**', message.guild.id, true)
       .addField('**<:owner:556682207532679189> Posse:**', `${message.guild.owner.user.username}#${message.guild.owner.user.discriminator}`, true)
       .addField('**Região:**', region[message.guild.region], true)
-      .addField('**Cargos:**',  `${message.guild.roles.size}`, true)
-      .addField('**Canais:**', message.guild.channels.size, true)
+      .addField('**Membros:**',  `${message.guild.memberCount}`, true)
+      .addField('**Canais:**', message.guild.channels.cache.size, true)
       .addField('**<:earlysupporter:556682087579516968> Criado dia:**', formatDate('DD/MM/YYYY, às HH:mm:ss', date), true)
       .addField('**<a:updating:556685577152626688> Você entrou dia:**', formatDate('DD/MM/YYYY, às HH:mm:ss', joined), true)
+      .addField('**Verificação:**', message.guild.verificationLevel, true)
       .setFooter('2020 © Star™️.')
       .setTimestamp()
 

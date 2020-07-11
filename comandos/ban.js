@@ -1,29 +1,28 @@
-const Discord = require("discord.js")
+var Discord = require('discord.js');
 
-module.exports.run = async (client, message, args) => {
-  message.delete()
-  if(!message.member.permissions.has("BAN_MEMBERS")) {
-    return message.reply("Você não tem a permissão necessária!")
-  }
-  
-  if(!message.guild.me.permissions.has("BAN_MEMBERS")) {
-    return message.reply("Eu não tenho a permissão necessária!")
-  }
-  
-  let membro = message.mentions.members.first() || message.guild.members.cache.get(args[0])
-  if(!membro) return message.reply("Você precisa mencionar alguem!")
-  if(membro.user.id === message.author.id) {
-    return message.reply("Você não pode se banir!")
-  }
-  if(membro.user.id === client.user.id) {
-    return message.reply("Por que você quer me banir?")
-  }
-  if(!membro.bannable) {
-    return message.reply("Eu não posso banir este membro!")
-  }
- 
-  let motivo = args.slice(1).join(" ")
-  if(!motivo) motivo = "Não Definido"
-  membro.ban({reason: motivo})
-  
+exports.run = async(client, msg, args) => {
+    if(!msg.member.hasPermission('BAN_MEMBERS')) return msg.reply('Você não pode Ultilizar este comando!');
+
+    var user = msg.mentions.users.first();
+    if(!user) return msg.reply('Mencione um Usuário!');
+
+    var member;
+
+    try {
+        member = await msg.guild.members.fetch(user);
+    } catch(err) {
+        member = null;
+    }
+
+    if(member){
+        if(member.hasPermission('MANAGE_MESSAGES')) return msg.reply('Não posso banir esta pessoa!');
+    }
+
+    var reason = args.splice(1).join(' ');
+    if(!reason) return msg.reply('Você não deu uma Rasão!');
+
+   
+    msg.guild.members.ban(user); // This should not be user.id like I said in my video. I made a mistake. Sorry! :)
+
+    msg.channel.send(`**${user}** foi banido por: **${msg.author}**!`);
 }

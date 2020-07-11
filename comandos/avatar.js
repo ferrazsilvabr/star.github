@@ -7,8 +7,7 @@ exports.run = async (client, message, args) => { //estrutura básica de criaçã
 
   let avatar = user.avatarURL({ dynamic: true, format: 'png', size: 1024 });
   // Armazena o link do avatar do usuário em outra variável. A propriedade Dynamic converte automatimente a extensão da imagem para um gif se ela for animada.
-
-
+ 
   let embed = new Discord.MessageEmbed() // Declarando a criação do Embed
     .setColor("RANDOM") // Cor Aleatória
     .setAuthor(`🖼️ ${user.username}#${user.discriminator}`) // Título do embed 

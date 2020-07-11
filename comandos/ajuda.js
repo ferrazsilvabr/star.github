@@ -7,7 +7,7 @@ module.exports.run = async (client, message, args) => {
   .setThumbnail(client.user.displayAvatarURL())
   .setDescription(`Olá, ${message.author} \n Meu nome é Star! \n Está é minha lista de comandos!`)
   .setImage(`https://i.pinimg.com/originals/ed/6b/ff/ed6bff8acacfe3129c50523c36c54c37.gif`)
-  .addField('🎈・Utilidades \n🍕・Diversão \n👮・Moderação \n💻・Desenvolvedor\n🔙・Voltar', '\u200B', false)
+  .addField('🎈・Utilidades \n🍕・Diversão \n👮・Moderação\n💸・Economia \n💻・Desenvolvedor\n🔙・Voltar', '\u200B', false)
   .setTimestamp()
   .setFooter(`Comando executado por: ${message.author.tag}`, message.author.displayAvatarURL());
 
@@ -16,6 +16,7 @@ module.exports.run = async (client, message, args) => {
       msg.react('🎈').then(r=>{
       msg.react('🍕')
       msg.react('👮') 
+      msg.react('💸')
       msg.react('💻')
       msg.react('🔙')
   })
@@ -23,11 +24,13 @@ module.exports.run = async (client, message, args) => {
   const utilfilter = (reaction, user) => reaction.emoji.name === '🎈' && user.id === message.author.id;
   const funfilter = (reaction, user) => reaction.emoji.name === '🍕' && user.id === message.author.id;
   const diverfilter = (reaction, user) => reaction.emoji.name === '👮' && user.id === message.author.id;
+  const economyfilter = (reaction, user) => reaction.emoji.name === '💸' && user.id === message.author.id;
   const devfilter = (reaction, user) => reaction.emoji.name === '💻' && user.id === message.author.id;
   const voltarfilter = (reaction, user) => reaction.emoji.name === '🔙' && user.id === message.author.id;
   const util = msg.createReactionCollector(utilfilter, { time: 1200000 });
   const fun = msg.createReactionCollector(funfilter, { time: 1200000 });
   const diver = msg.createReactionCollector(diverfilter, { time: 1200000 });
+   const economy = msg.createReactionCollector(economyfilter, { time: 1200000 });
    const dev = msg.createReactionCollector(devfilter, { time: 1200000 });
   const voltar = msg.createReactionCollector(voltarfilter, { time: 1200000 });
 
@@ -50,7 +53,7 @@ module.exports.run = async (client, message, args) => {
           .setColor("#7c2ae8")
           .setImage(`https://i.pinimg.com/originals/ed/6b/ff/ed6bff8acacfe3129c50523c36c54c37.gif`)
           .setThumbnail(message.author.displayAvatarURL())
-          .setDescription(`> **🍕 » Comandos de Diversão!**\n\n<:seta:724376306166399057> s!hug - Abraçe Alguém! \n<:seta:724376306166399057> s!kiss - Beije Alguém! \n<:seta:724376306166399057> s!slap - Bata em Alguém! \n<:seta:724376306166399057> s!8ball - Pergunte a Bola Magica! \n<:seta:724376306166399057> s!ship - Se Shipe com Alguém! \n<:seta:724376306166399057> s!primeiraspalavras - Faça o Bebe falar!\n <:seta:724376306166399057> s!laranjo - faça meme do laranjo!\n<:seta:724376306166399057> s!emojify - transforme texto em emojis!\n<:seta:724376306166399057> s!morse - Transforme texto em morse!\n<:seta:724376306166399057> s!quiz - veja se você é esperto!\n<:seta:724376306166399057> s!mcconquista - crie uma conquista de mine!\n<:seta:724376306166399057> s!roll - role os dados!\n<:seta:724376306166399057> s!tempo - Veja  Tempo Real de Qualquer Local!\n<:seta:724376306166399057> s!coinflip - Tire cara ou coroa!\n<:seta:724376306166399057> s!mchead - Pegue uma "Head" de mine\n<:seta:724376306166399057> s!mcskin - Pegue uma skin de mine.`);
+          .setDescription(`> **🍕 » Comandos de Diversão!**\n\n<:seta:724376306166399057> s!hug - Abraçe Alguém! \n<:seta:724376306166399057> s!kiss - Beije Alguém! \n<:seta:724376306166399057> s!slap - Bata em Alguém! \n<:seta:724376306166399057> s!8ball - Pergunte a Bola Magica! \n<:seta:724376306166399057> s!ship - Se Shipe com Alguém! \n<:seta:724376306166399057> s!primeiraspalavras - Faça o Bebe falar!\n <:seta:724376306166399057> s!laranjo - faça meme do laranjo!\n<:seta:724376306166399057> s!emojify - transforme texto em emojis!\n<:seta:724376306166399057> s!morse - Transforme texto em morse!\n<:seta:724376306166399057> s!mcconquista - crie uma conquista de mine!\n<:seta:724376306166399057> s!roll - role os dados!\n<:seta:724376306166399057> s!tempo - Veja  Tempo Real de Qualquer Local!\n<:seta:724376306166399057> s!coinflip - Tire cara ou coroa!\n<:seta:724376306166399057> s!mchead - Pegue uma "Head" de mine\n<:seta:724376306166399057> s!mcskin - Pegue uma skin de mine.`);
     
       msg.edit(embed);
   })
@@ -61,12 +64,22 @@ module.exports.run = async (client, message, args) => {
           .setColor("#7c2ae8")
           .setImage(`https://i.pinimg.com/originals/ed/6b/ff/ed6bff8acacfe3129c50523c36c54c37.gif`)
           .setThumbnail(message.author.displayAvatarURL())
-          .setDescription(`> **👮 » Moderação!**\n\n<:seta:724376306166399057> s!ban - Bane o Usuário Mencionado! \n<:seta:724376306166399057>  s!kick - Expulsa o Usuário Mencionado! \n<:seta:724376306166399057> s!clean - Limpe seu Chat \n<:seta:724376306166399057> s!slowmode - Ative o Modo Lento!`);
+          .setDescription(`> **👮 » Moderação!**\n\n<:seta:724376306166399057> s!ban - Bane o Usuário Mencionado! \n<:seta:724376306166399057>  s!kick - Expulsa o Usuário Mencionado! \n<:seta:724376306166399057> s!clean - Limpe seu Chat \n<:seta:724376306166399057> s!slowmode - Ative o Modo Lento!\n<:seta:724376306166399057> s!lock - Feche o canal\n<:seta:724376306166399057> s!unlock - Abra o canal!`);
       msg.edit(embed);
   })
 
-  dev.on('collect', r4 => { 
+  economy.on('collect', r4 => { 
    r4.users.remove(message.author.id)
+      embed = new Discord.MessageEmbed()
+          .setColor("#7c2ae8")
+          .setImage(`https://i.pinimg.com/originals/ed/6b/ff/ed6bff8acacfe3129c50523c36c54c37.gif`)
+          .setThumbnail(message.author.displayAvatarURL())
+          .setDescription(`> **💸 » Economia!**\n\n<:seta:724376306166399057> s!daily - Pegue seu bonûs diário! \n<:seta:724376306166399057>  s!work - Trabalhe para ganhar dinheiro! \n<:seta:724376306166399057> s!bal - Veja seu dinheiro! \n<:seta:724376306166399057> s!loja - Veja produtos para adquirir!\n<:seta:724376306166399057> s!dep - Deposite seu dinheiro!\n<:seta:724376306166399057> s!comprar - Compre qualquer produto da Loja`);
+      msg.edit(embed);
+  })
+
+  dev.on('collect', r5 => { 
+   r5.users.remove(message.author.id)
       embed = new Discord.MessageEmbed()
           .setColor("#7c2ae8")
           .setImage(`https://i.pinimg.com/originals/ed/6b/ff/ed6bff8acacfe3129c50523c36c54c37.gif`)
@@ -83,7 +96,7 @@ module.exports.run = async (client, message, args) => {
   .setThumbnail(client.user.displayAvatarURL())
   .setDescription(`Olá, ${message.author} \n Meu nome é Star! \n Está é minha lista de comandos!`)
   .setImage(`https://i.pinimg.com/originals/ed/6b/ff/ed6bff8acacfe3129c50523c36c54c37.gif`)
-  .addField('🎈・Utilidades \n🍕・Diversão \n👮・Moderação \n💻・Desenvolvedor\n🔙・Voltar', '\u200B', false)
+  .addField('🎈・Utilidades \n🍕・Diversão \n👮・Moderação\n💸・Economia \n💻・Desenvolvedor\n🔙・Voltar', '\u200B', false)
   .setTimestamp()
           
     msg.edit(embed);

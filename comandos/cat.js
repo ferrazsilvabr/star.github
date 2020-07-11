@@ -9,7 +9,7 @@ module.exports.run = async (client,message,args) => {
     "url": "https://discordapp.com",
     "color": 11733342,
     "footer": {
-      "text": "🐱r!cat"
+      "text": "🐱 s!cat"
     },
     "image": {
       "url": json.file
