@@ -18,14 +18,15 @@ exports.run = async (client, message, args) => {
     if (typeof result !== 'string') result = require('util').inspect(result)
     let end = (Date.now() - beforeRunning)
     let embed = new MessageEmbed(message.author).setTimestamp()
-      .setTitle('Sucesso!')
+      .setAuthor('✔️ • Sucesso!')
       .setDescription('```' + result.slice(0, 2000) + '```')
-      .addField('Tempo de execução', (end / 60).toFixed(5) + 's').setColor("PURPLE")
+      .addField('Tempo de execução', (end / 60).toFixed(5) + 's').setColor("00ff0b")
     m.edit('Sucesso!', { embed: embed })
   } catch (e) {
     let embed = new MessageEmbed(message.author).setTimestamp()
-      .setTitle('Erro!')
+      .setAuthor('❌ • Erro!')
       .setDescription('```' + e.stack.slice(0, 2000) + '```')
+      .setColor("ff0000")
     m.edit('Falha...', { embed: embed })
   }
 }

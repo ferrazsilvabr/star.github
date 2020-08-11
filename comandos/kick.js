@@ -3,6 +3,10 @@ var Discord = require('discord.js');
 exports.run = async(client, msg, args) => {
     if(!msg.member.hasPermission('KICK_MEMBERS')) return msg.reply('Você não pode Ultilizar este comando!');
 
+    if(!message.guild.me.permissions.has("KICK_MEMBERS")) {
+    return message.reply("Eu não tenho a permissão necessária!")
+  }
+
     var user = msg.mentions.users.first();
     if(!user) return msg.reply('Mencione um Usuário!');
 

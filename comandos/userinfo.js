@@ -1,45 +1,75 @@
-const commando = require('discord.js-commando');
-const Discord = require('discord.js');
-const moment = require("moment");
-require("moment-duration-format");
+const { MessageEmbed } = require('discord.js');
 
+module.exports = {
+    run: async (client, message, args) => {
+        let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
 
-class UserInfoCommand extends commando.Command
-{
-    constructor(client)
-    {
-        super(client,{
-            name: "userinfo",
-            group: "simple",
-            memberName: "userinfo",
-            description: "Gives the user's info"
-        });
+        let status;
+        switch (user.presence.status) {
+            case "online":
+                status = "<:online:556678187786960897> Online";
+                break;
+            case "dnd":
+                status = "<:dnd:556678417018257408> Não Pertube";
+                break;
+            case "idle":
+                status = "<:idle:556678338031255572> Ausente";
+                break;
+            case "offline":
+                status = "<:offline:556678259778256896> Offline / Invisível";
+                break;
+        }
+
+        const embed = new MessageEmbed()
+            .setAuthor(`${user.user.username}#${user.user.discriminator}`)
+            .setColor(`#ff0000`)
+            .setThumbnail(user.user.displayAvatarURL({dynamic : true}))
+            .addFields(
+                {
+                    name: "Nome de Usuário: ",
+                    value: user.user.username,
+                    inline: false
+                },
+                {
+                    name: "Tag: ",
+                    value: `${user.user.discriminator}`,
+                    inline: false
+                },
+                {
+                    name: "ID: ",
+                    value: user.user.id,
+                },
+                {
+                    name: "Status: ",
+                    value: status,
+                    inline: false
+                },
+                {
+                    name: "Atividade: ",
+                    value: user.presence.activities[0] ? user.presence.activities[0].name : `O Usuário Não Está Jogando Nada!`,
+                    inline: false
+                },
+                {
+                    name: 'Download Do Avatar: ',
+                    value: `[Clique Aqui Para Baixar!](${user.user.displayAvatarURL()})`
+                },
+                {
+                    name: 'Conta Criada Em: ',
+                    value: user.user.createdAt.toLocaleDateString("pt-BR"),
+                    inline: false
+                },
+                {
+                    name: 'Entrou No Servidor Em: ',
+                    value: user.joinedAt.toLocaleDateString("pt-BR"),
+                    inline: false
+                },
+                {
+                    name: 'Cargos Do Usuário: ',
+                    value: user.roles.cache.map(role => role.toString()).join(" ,"),
+                    inline: false
+                }
+            )
+
+        await message.channel.send(embed)
     }
-
-    async run(message, args)
-    {
-        let user = message.mentions.users.first(); message.author;
-
-        let userInfo = {};
-        userInfo.avatar = user.displayAvatarURL()
-        userInfo.name = user.username
-        userInfo.discrim - `#${user.discriminator}`;
-        userInfo.id = user.id
-        userInfo.registered = moment.utc(message.guild.members.get(user.id).user.createdAt).format("dddd, MMMM Do, YYYY")
-        userInfo.joined = moment.utc(message.guild.members.get(user.id).joinedAt).format("dddd, MMMM Do, YYYY");
-        
-        const embed = new Discord.MessageEmbed()
-        .setAuthor(user.tag, userInfo.avatar)
-        .setThumbnail(userInfo.avatar)
-        .addField('Username', userInfo.name, true)
-        .addField('Discriminator', userInfo.discrim, true)
-        .addField('ID' , userInfo.id, true)
-        .addField('Registered', userInfo.registered)
-        .addField('Joined', userInfo.joined)
-
-       return message.channel.send(embed);
-    }
-
 }
-
-module.exports = UserInfoCommand;

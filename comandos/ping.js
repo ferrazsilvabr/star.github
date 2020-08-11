@@ -5,6 +5,9 @@ exports.run = async (client, message) => {
   
   ms.edit({embed: {
   color: 15158332,
-  description: ('📡┃Meu ping Atual é: ' + clientms + 'ms')
+  description: (`📡┃Latência do Servidor: **${ms.createdTimestamp -
+      message.createdTimestamp}ms**\n🛰️┃Latência da API: **${Math.round(
+      client.ws.ping
+    )}ms**`)
 }});
 }

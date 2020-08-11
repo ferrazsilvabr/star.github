@@ -10,9 +10,9 @@ exports.run = async (client, message, args) => { //estrutura básica de criaçã
  
   let embed = new Discord.MessageEmbed() // Declarando a criação do Embed
     .setColor("RANDOM") // Cor Aleatória
-    .setAuthor(`🖼️ ${user.username}#${user.discriminator}`) // Título do embed 
+    .setAuthor(`🖼️ ${user.tag}`) // Título do embed 
     .setDescription(`[Clique Aqui](${avatar}) para baixar a imagem!`)
     .setImage(avatar) // Aqui mostramos seu rostinho lindo
  await message.channel.send(embed); //Enviando o embed no chat
 
-}; // cabou!
+}; // cabou!    

@@ -5,7 +5,7 @@ module.exports.run = async (client,message,args) => {
         	.setTitle("<:diamante:708378754677735424> • Votos!")        
           .addField("❓ FAQ Votos:", ("Você pode Me Ajudar a Crescer Votando!"))
           .addField("<:earlysupporter:556682087579516968> Bots para Discord:", "[Clique Aqui!](https://botsparadiscord.com/bots/719524114536333342/votar)")
-          .addField("<:prancheta:708377388618219680> Top.GG (Ainda Não Aprovado!)", "[Clique Aqui!](https://top.gg/bot/719524114536333342/vote)")
+          .addField("<:prancheta:708377388618219680> Top.GG ", "[Clique Aqui!](https://top.gg/bot/719524114536333342/vote)")
           .setColor(`PURPLE`)
           .setFooter('© Star 2020', client.user.displayAvatarURL());
     message.channel.send(embed)

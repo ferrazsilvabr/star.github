@@ -7,9 +7,9 @@ exports.run = async (client, message, args) => { //estrutura básica de criaçã
   
   let embed = new Discord.MessageEmbed() // Declarando a criação do Embed
     .setColor("RANDOM") // Cor em hexadecimal
-    .setTitle(`${message.guild.name}`) // Título do embed 
+    .setAuthor(`🖼️ ${message.guild.name}`) // Título do embed 
+    .setDescription(`[Clique Aqui](${avatar}) para baixar a imagem!`)
     .setImage(avatar) // Aqui mostramos seu rostinho lindo
-    .setFooter(`• Autor: ${message.author.tag}`, message.author.displayAvatarURL({format: "png"})); // Mensagem do rodapé
  await message.channel.send(embed); //Enviando o embed no chat
 
 }; // cabou!

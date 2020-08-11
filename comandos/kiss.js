@@ -1,30 +1,34 @@
 const Discord = require('discord.js');
+const superagent = require('superagent');
+const c = require('../config.json');
 
 exports.run = async (client, message, args) => {
 
-var list = [
-  'https://imgur.com/iclUiUN.gif',
-  'https://imgur.com/lYQt9rx.gif',
-  'https://imgur.com/w1TU5mR.gif',
-  'https://media1.tenor.com/images/b6e36a6ed9b963e0f004bc0558405cb2/tenor.gif?itemid=12307773'
-];
+  let erro = new Discord.MessageEmbed()
 
-var rand = list[Math.floor(Math.random() * list.length)];
-let user = message.mentions.users.first() || client.users.cache.get(args[0]);
-if (!user) {
-return message.reply('lembre-se de mencionar um usuário válido para beijar!');
+  .setTitle(`INFORMAÇÃO`)
+  .setDescription(`*Dê um beijo em alguém*`)
+  .addField(`:hammer: **Uso**`, `\`${c.prefix}beijo <@user>\``, true)
+  .addField(`:book: **Exemplo**`, `\`${c.prefix}beijo @kayozin\``, true)
+  .addField(`:bookmark: **Permissão**`, `\`Nenhuma\``)
+  .addField(`:twisted_rightwards_arrows: **Alternativas**`, `\`${c.prefix}beijar\``)
+  .setColor('#a67dff')  
+
+    if (!message.mentions.users.first()) return message.channel.send(erro);
+    if (message.mentions.users.first().id === "719524114536333342") return message.channel.send(`Perdão **${message.author.username}**, já estou comprometida :3`);
+
+    const { body } = await superagent
+    .get("https://nekos.life/api/v2/img/kiss");
+    let avatar = message.author.displayAvatarURL({format: 'png'});
+    const embed = new Discord.MessageEmbed()
+    .setColor("#ff9900")
+    .setTitle("Beijo")
+    .setDescription(`${message.author} acaba de abraçar ${message.mentions.users.first()}`)
+    .setImage(body.url)
+    .setThumbnail(avatar) 
+    message.channel.send({embed})
 }
-/*
-message.channel.send(`${message.author.username} **acaba de beijar** ${user.username}! :heart:`, {files: [rand]});
-*/
-let avatar = message.author.displayAvatarURL({format: "png"});
-  const embed = new Discord.MessageEmbed()
-        .setTitle('Kiss')
-        .setColor('#000000')
-        .setDescription(`${message.author} acaba de beijar ${user}`)
-        .setImage(rand)
-        .setTimestamp()
-        .setFooter('Seja Carinhoso! Digite l!kiss @pessoa')
-        .setAuthor(message.author.tag, avatar);
-  await message.channel.send(embed);
-}
+exports.help = {
+    name: 'kiss',
+    aliases: ['beijar']
+}   

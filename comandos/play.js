@@ -1,37 +1,30 @@
-const ytdl = require('ytdl-core'),
-    search = require('yt-search'),
-    Discord = require('discord.js');
+const discord = require("discord.js")
+const queue = new Map();
+const YouTube = require('simple-youtube-api');
+const ytdl = require('ytdl-core');
+const youtube = new YouTube("api do yt");
 
-exports.run = (client, message, args) => {
 
-    console.log(message.guild);
-    if (!message.member.voiceChannel) return message.reply('Entre em um canal de voz.');
-    if (message.guild.me.voiceChannel) return message.reply('Já estou sendo utilizado');
-
-    let pesquisa = args.join(' ');
-
-    if (!pesquisa) return message.reply('Você não digitou um vídeo válido.');
-
-    search(pesquisa, async (error, response) => {
-        if (error) console.log(error);
-
-        const video = response.videos[0];
-
-        const con = await message.member.voiceChannel.join();
-        const tocar = await con.playStream(ytdl(video.url, { filter: 'audioonly' }));
-
-        tocar.on('end', () => {
-            message.channel.send('A música acabou, flw abraço!');
-            message.member.voiceChannel.leave();
-        });
-
-        const embed = Discord.MessageEmbed()
-        .setAuthor(message.author.tag, message.author.avatarURL)
-        .setTitle(`Tocando agora: ${video.title}`)
-        .setURL(`https://www.youtube.com${video.url}`)
-        .setDescription(`Duração: ${video.duration.timestamp}`)
-        .setColor('#0099ff');
-
-        message.channel.send(embed);
-    });
-};
+exports.run = async (client, message, args, ops) => {
+    let Canalvoz = message.member.voiceChannel;
+    if(!message.member.voiceChannel) return message.channel.send('Por favor, conecte-se a um canal de voz.');
+    if(message.guild.me.voiceChannel) return message.channel.send('Desculpe, o bot já está conectado à guilda.');
+    if(!args[0]) return message.channel.send('Desculpe, por favor insira uma url seguindo o comando.');
+    let validate = ytdl.validateURL(args[0]);
+  
+    if (!validate) return message.channel.send("Desculpe, por favor insira um URL de validação seguindo o comando");
+    let info = await ytdl.getInfo(args[0]);
+    Canalvoz.join()
+    .then(connection => {
+        const url = ytdl(args.join(' '), { filter : 'audioonly' });
+        const dispatcher = connection.playStream(url);
+    
+    
+        
+    }).catch(console.error);
+    message.channel.send(`Entrei no canal e já estou tocando a música ;)`);
+  
+}
+module.exports.help = {
+    name: "play"
+  };
