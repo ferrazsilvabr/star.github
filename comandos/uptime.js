@@ -18,3 +18,7 @@ module.exports.run = async (client, message, args) => {
 
   message.channel.send(embed);
 };
+exports.help = {
+    name: 'uptime',
+    aliases: ['up']
+}

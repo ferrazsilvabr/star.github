@@ -34,18 +34,7 @@ message.channel.send(
         .join('')
 );
 };
-
-exports.conf = {
-	enabled: true,
-	guildOnly: false,
-	aliases: ['emojify'],
-	permLevel: 0,
-  manu: false
-};
-
 exports.help = {
-	name: 'Emojify',
-	category: '🎉 Diversão',
-	description: 'Faz uma montagem de letras utilizando emojis do Discord',
-	usage: 'r!emojify [texto]'
-};
+    name: 'emojify',
+    aliases: [ ]
+}

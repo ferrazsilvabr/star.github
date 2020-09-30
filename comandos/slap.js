@@ -18,3 +18,7 @@ exports.run = async (client, message, args) => {
     .setImage(body.url) 
     message.channel.send({embed})
 }
+exports.help = {
+    name: 'slap',
+    aliases: ['tapa']
+}

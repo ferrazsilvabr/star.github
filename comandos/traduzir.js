@@ -1,6 +1,5 @@
 const translate = require('@vitalets/google-translate-api');
-const Discord = require('discord.js');
-let langs = {
+const langs = {
     "auto": "Automatic",
     "ar": "Arabe",
     "nl": "Holandes",
@@ -20,10 +19,10 @@ let langs = {
     "es": "Espanhol"
 }
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = (client, message, args) => {
  
   if (!args[0]) {
-    return message.channel.send(`Use dessa forma: /traduzir <lingua> + <lingua> <mensagem>`)
+    return message.channel.send(`Use dessa forma: s!traduzir <lingua> + <lingua> <mensagem>`)
   }
   
   let msg = args.slice(2).join(' ');
@@ -44,3 +43,7 @@ module.exports.run = async (client, message, args) => {
     message.channel.send('Desculpe mas essa lingua não existe.')
   })
 };
+exports.help = {
+    name: 'traduzir',
+    aliases: ['translate']
+}

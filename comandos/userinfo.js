@@ -1,75 +1,54 @@
-const { MessageEmbed } = require('discord.js');
+const Discord = require('discord.js');
+const moment = require('moment');
 
-module.exports = {
-    run: async (client, message, args) => {
-        let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
+exports.run = async (client, message, args) => {
+  let user = message.mentions.users.first() || message.author
 
-        let status;
-        switch (user.presence.status) {
-            case "online":
-                status = "<:online:556678187786960897> Online";
-                break;
-            case "dnd":
-                status = "<:dnd:556678417018257408> Não Pertube";
-                break;
-            case "idle":
-                status = "<:idle:556678338031255572> Ausente";
-                break;
-            case "offline":
-                status = "<:offline:556678259778256896> Offline / Invisível";
-                break;
-        }
+  if (user.presence.status === "dnd") user.presence.status = "Não pertubar";
+  if (user.presence.status === "idle") user.presence.status = "Ausente";
+  if (user.presence.status === "offline") user.presence.status = "Offline";
+  if (user.presence.status === "online") user.presence.status = "Online";
 
-        const embed = new MessageEmbed()
-            .setAuthor(`${user.user.username}#${user.user.discriminator}`)
-            .setColor(`#ff0000`)
-            .setThumbnail(user.user.displayAvatarURL({dynamic : true}))
-            .addFields(
-                {
-                    name: "Nome de Usuário: ",
-                    value: user.user.username,
-                    inline: false
-                },
-                {
-                    name: "Tag: ",
-                    value: `${user.user.discriminator}`,
-                    inline: false
-                },
-                {
-                    name: "ID: ",
-                    value: user.user.id,
-                },
-                {
-                    name: "Status: ",
-                    value: status,
-                    inline: false
-                },
-                {
-                    name: "Atividade: ",
-                    value: user.presence.activities[0] ? user.presence.activities[0].name : `O Usuário Não Está Jogando Nada!`,
-                    inline: false
-                },
-                {
-                    name: 'Download Do Avatar: ',
-                    value: `[Clique Aqui Para Baixar!](${user.user.displayAvatarURL()})`
-                },
-                {
-                    name: 'Conta Criada Em: ',
-                    value: user.user.createdAt.toLocaleDateString("pt-BR"),
-                    inline: false
-                },
-                {
-                    name: 'Entrou No Servidor Em: ',
-                    value: user.joinedAt.toLocaleDateString("pt-BR"),
-                    inline: false
-                },
-                {
-                    name: 'Cargos Do Usuário: ',
-                    value: user.roles.cache.map(role => role.toString()).join(" ,"),
-                    inline: false
-                }
-            )
+  function game() {
+    let game;
+    if (user.presence.activities.length >= 1) game = `${user.presence.activities[0].type} ${user.presence.activities[0].name}`;
+    else if (user.presence.activities.length < 1) game = "Nada"
+    return game;
+  }
 
-        await message.channel.send(embed)
-    }
+  let x = Date.now() - user.createdAt;
+  let y = Date.now() - message.guild.members.cache.get(user.id).joinedAt;
+  let created = Math.floor(x / 86400000);
+  let joined = Math.floor(y / 86400000);
+
+  const member = message.guild.member(user);
+  let nickname = member.nickname !== undefined && member.nickname !== null ? member.nickname : "Nenhum";
+  let createdate = moment.utc(user.createdAt).format("dddd, MMMM Do YYYY, HH:mm:ss");
+  let joindate = moment.utc(member.joinedAt).format("dddd, MMMM Do YYYY, HH:mm:ss");
+  let status = user.presence.status;
+  let avatar = user.avatarURL({ size: 2048 });
+
+  const embed = new Discord.MessageEmbed()
+    .setAuthor(user.tag, avatar)
+    .setThumbnail(avatar)
+    .setTimestamp()
+    .setColor('BLUE')
+    .addField("ID", user.id, true)
+    .addField("Nick", nickname, true)
+    .addField("Conta criada dia", `${createdate} \ná ${created} dias`, true)
+    .addField("Entrou no servidor em", `${joindate} \ná ${joined} dias`, true)
+    .addField("Status", status, true)
+    .addField("Game", game(), true)
+
+  message.channel.send(embed);
+}
+
+exports.conf = {
+  aliases: ["user"],
+  cooldown: 5
+}
+
+exports.help = {
+    name: 'userinfo',
+    aliases: ['ui']
 }

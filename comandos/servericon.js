@@ -13,3 +13,7 @@ exports.run = async (client, message, args) => { //estrutura básica de criaçã
  await message.channel.send(embed); //Enviando o embed no chat
 
 }; // cabou!
+exports.help = {
+    name: 'servericon',
+    aliases: ['sic']
+}

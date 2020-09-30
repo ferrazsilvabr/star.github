@@ -9,20 +9,20 @@ exports.run = async (client, message, args) => {
     }
 
     const embed = new Discord.MessageEmbed()
-        .setAuthor(`Sugestão de ${message.author.username}#${message.author.discriminator}`, message.author.AvatarURL)
-        .setDescription(`${mensg}`)
+        .setAuthor(`Sugestão de ${message.author.tag}`)
+        .setDescription(`\`\`\`${mensg}\`\`\``)
         .setColor('RANDOM')
         .setThumbnail(message.author.AvatarURL)
-        .setTimestamp()
-    client.channels.cache.get(`727241470406426714`).send(embed)
+    client.channels.cache.get(`754691920625926228`).send(embed)
         .then(function (msg) {
-            msg.react(":sim:723648837692162088");
-            msg.react(":nao:723648836278681682"); 
-            message.delete({
-                timeout: 1000
-            });
-            message.channel.send(`**Sua sugestão foi enviada! :mailbox_with_no_mail:**`).then(msg => msg.delete(5000))
+            msg.react("a:sim:753735844812161034");
+            msg.react("a:nao:753735889783357560"); 
+            message.channel.send(`**Sua sugestão foi enviada! :mailbox_with_no_mail:**`)
         }).catch(function (error) {
             console.log(error);
         });
+}
+exports.help = {
+    name: 'sugestao',
+    aliases: ['sugestão', 'sugerir', 'suggest']
 }

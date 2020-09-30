@@ -1,19 +1,6 @@
-/**
- * O Comando "serverinfo" mostrará informações do servidor
- */
+const { MessageEmbed } = require('discord.js');
 
-const Discord = require('discord.js')
-let longify = require('nekos-longify-function');
-
-const moment = require('moment')
-moment.locale('pt-br')
-
-module.exports = {
-  
-
-  run: function (client, message, args) {
-    const date = message.guild.createdAt
-    const joined = message.member.joinedAt
+module.exports.run = async (client, message, args) => {
 
     const region = {
       brazil: ':flag_br: Brazil',
@@ -31,61 +18,67 @@ module.exports = {
       uswest: 'US West'
     }
 
-    const verificationLevel = {
-      none: 'Nenhuma',
-      low: 'Baixa',
-      medium: 'Média',
-      high: 'Alta',
-      taller: 'Mais Alta!'
+        const embed = new MessageEmbed()
+            .setThumbnail(message.guild.iconURL({dynamic : true}))
+            .setColor('#f3f3f3')
+            .setTitle(`${message.guild.name}`)
+            .addFields(
+                {
+                    name: "<:owner:556682207532679189> Dono: ",
+                    value: message.guild.owner.user.tag,
+                    inline: true
+                },
+                {
+                    name: "<:online:556678187786960897> Membros: ",
+                    value: `Esse servidor tem  ${message.guild.memberCount} membros`,
+                    inline: true
+                },
+                {
+                    name: "<:online:556678187786960897> Membros Online: ",
+                    value: `Esse servidor tem ${message.guild.members.cache.filter(m => m.user.presence.status == "online").size} membros online!`,
+                    inline: true
+                },
+                {
+                    name: "<:bughunter:556682363120254979> Bots ",
+                    value: `Esse servidor tem ${message.guild.members.cache.filter(m => m.user.bot).size} bots!`,
+                    inline: true
+                },
+                {
+                    name: "<:join_arrow:610983150406991873> Criado em: ",
+                    value: message.guild.createdAt.toLocaleDateString("pt-br"),
+                    inline: true
+                },
+                {
+                    name: "<:earlysupporter:556682087579516968> Quantidade de cargos: ",
+                    value: `Esse servidor tem ${message.guild.roles.cache.size}       cargos`,
+                    inline: true,
+                },
+                {
+                    name: `🗺 Região: `,
+                    value: region[message.guild.region],
+                    inline: true
+                },
+                {
+                    name: `<:certified:556682763814699008> Verificação: `,
+                    value: message.guild.verified ? 'Servidor verificado' : `Servidor não verificado`,
+                    inline: true
+                },
+                {
+                    name: '<a:nitrooo:740621688701714666> Impulsos: ',
+                    value: message.guild.premiumSubscriptionCount >= 1 ? ` Esse servidor tem ${message.guild.premiumSubscriptionCount} Boosts` : `Esse servidor não possui Impulsos`,
+                    inline: true
+                },
+                {
+                    name: "<:bid_aprovado:745008665676742757> Emojis: ",
+                    value: message.guild.emojis.cache.size >= 1 ? `Esse servidor tem ${message.guild.emojis.cache.size} emojis!` : 'Esse server não tem emojis' ,
+                    inline: true
+                }
+            )
+        await message.channel.send(embed)
+        
     }
 
-    const embed = new Discord.MessageEmbed()
-      .setColor("BLUE")
-      .setThumbnail(message.guild.iconURL())
-      .setTitle("<:earlysupporter:556682087579516968> • Informações do servidor!")
-      .addField('**<a:verificado:708359371507105893> Nome:**', message.guild.name, true)
-      .addField('**<:certified:556682763814699008> ID:**', message.guild.id, true)
-      .addField('**<:owner:556682207532679189> Posse:**', `${message.guild.owner.user.username}#${message.guild.owner.user.discriminator}`, true)
-      .addField('**Região:**', region[message.guild.region], true)
-      .addField('**Membros:**',  `${message.guild.memberCount}`, true)
-      .addField('**Canais:**', message.guild.channels.cache.size, true)
-      .addField('**<:earlysupporter:556682087579516968> Criado dia:**', formatDate('DD/MM/YYYY, às HH:mm:ss', date), true)
-      .addField('**<a:updating:556685577152626688> Você entrou dia:**', formatDate('DD/MM/YYYY, às HH:mm:ss', joined), true)
-      .addField('**Verificação:**', message.guild.verificationLevel, true)
-      .setFooter('2020 © Star™️.')
-      .setTimestamp()
-
-    // Aqui sera enviado o embed no canal que o usuário executo o comando
-    message.channel.send(embed)
-  },
-  /**
-     * Aqui podemos colocar mais algumas configurações do comando.
-     */
-  conf: {},
-
-  /**
-     * Aqui exportamos ajuda do comando como o seu nome categoria, descrição, etc...
-     */
-  get help () {
-    return {
-      name: 'serverinfo',
-      category: 'Info',
-      description: 'Informação sobre o servidor',
-      usage: 'serverinfo'
-    }
-  }
-}
-
-/**
- * Formata a data passada para o padrão do Brasil.
- * @param {string} template
- * @param {Date=} [date]
- * @return {string}
- */
-function formatDate (template, date) {
-  var specs = 'YYYY:MM:DD:HH:mm:ss'.split(':')
-  date = new Date(date || Date.now() - new Date().getTimezoneOffset() * 6e4)
-  return date.toISOString().split(/[-:.TZ]/).reduce(function (template, item, i) {
-    return template.split(specs[i]).join(item)
-  }, template)
+exports.help = {
+    name: 'serverinfo',
+    aliases: ['si']
 }

@@ -29,24 +29,14 @@ const config = require("./config.json");
 const { prefix } = require("./config.json")
 const ytdl = require('ytdl-core');
 const db = require('quick.db')
-const DBL = require("dblapi.js");
 const Money = require("./money.js");
 const autorole = require('./autorole.js');
 const votosZuraaa = require('./votosZuraaa.js');
 const logChannel = require('./messagelog.js');
 const fs = require('fs');
 const AFK = require('./afk.js');
+const glob = require('glob')
 const emoji = require('./emojis.json');
-const dbl = new DBL('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcxOTUyNDExNDUzNjMzMzM0MiIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk1NTk2ODMxfQ.izb6Ux2AnD1ISIHX8k5DpP6vWeUfIDir4cO_zwc2F98', client);
-// Optional events
-dbl.on('posted', () => {
-  console.log('Server count posted!');
-})
-
-dbl.on('error', e => {
- console.log(`Oops! ${e}`);
-})
-
 
 client.on('message', message => {
      if (message.author.bot) return;
@@ -140,7 +130,7 @@ client.on('messageDelete', async (message) => {
   if(message.author.bot) return;
   let messageChannel = client.channels.cache.get(data12.MessageLogChannel)
   let messageDeleteEmbed = new Discord.MessageEmbed()
-  .setAuthor('Mensagem Deletada')
+  .setAuthor('Mensagem Deletada', 'https://media.discordapp.net/attachments/506838906872922145/603642595419357190/messagedelete.png')
   .setDescription(`**Usuário**\: <@${message.author.id}>
   **Canal**\: <#${message.channel.id}>
   ${message.content}`)
@@ -157,7 +147,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
   if(newMessage.author.bot) return;
   let messageChannel2 = client.channels.cache.get(data53.MessageLogChannel)
   let messageUpdateEmbed = new Discord.MessageEmbed()
-  .setAuthor('Mensagem Editada')
+  .setAuthor('Mensagem Editada', 'https://media.discordapp.net/attachments/506838906872922145/603643138854354944/messageupdate.png')
   .setDescription(`**Usuário**\: <@${oldMessage.author.id}>
   **Canal**\: <#${oldMessage.channel.id}>`)
   .addField('Antes\:', `${oldMessage.content}`)

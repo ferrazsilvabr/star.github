@@ -1,82 +1,55 @@
-/**
- * O Comando "botinfo"mostrará informações do bot
- */
+const Discord = require("discord.js");
+const os = require("os");
 
-const Discord = require('discord.js')
-const moment = require('moment')
+module.exports.run = async (client, message, args) => {
+const ms = await message.channel.send("<:relogio:755526912033685564>┃Aguarde");
+const clientms = ms.createdTimestamp - message.createdTimestamp;
 
-moment.locale('pt-br')
-
-module.exports = {
-
-  run: function (client, message, args) {
-    const inline = true
-    const botAvatar = client.user.displayAvatarURL
-    const date = client.user.createdAt
-    const userName = client.user.username
-    const servsize = client.guilds.size
-    const usersize = client.users.size
-    const status = {
-      online: '<:online:556678187786960897> Online',
-      offline: '<:offline:556678259778256896> Offline'
-    }
-      let totalSeconds = client.uptime / 1000;
+  let totalSeconds = client.uptime / 1000;
   let days = Math.floor(totalSeconds / 86400);
   let hours = Math.floor(totalSeconds / 3600);
   totalSeconds %= 3600;
   let minutes = Math.floor(totalSeconds / 60);
-  let seconds = totalSeconds % 60;
+  let seconds = totalSeconds % 60;  
+  let modelo = os.cpus().map((i) => `${i.model}`)[0]
 
-  let uptime = `🗓️ ${days.toFixed()} dias\n🗓️ ${hours.toFixed()} horas\n🗓️ ${minutes.toFixed()} minutos\n🗓️ ${seconds.toFixed()} segundos`;
+  const promises = [
+    client.shard.fetchClientValues('users.cache.size'),
+    client.shard.fetchClientValues('guilds.cache.size'),
+    client.shard.fetchClientValues('channels.cache.size'),
+];
+
+Promise.all(promises).then(async results => {
+    const totalUsers = results[0].reduce((prev, userCount) => prev + userCount, 0);
+    const totalGuilds = results[1].reduce((prev, guildCount) => prev + guildCount, 0);
+    const totalCanais = results[2].reduce((prev, channelCount) => prev + channelCount, 0);
 
 
-    const embed = new Discord.MessageEmbed()
-      .setColor("RED")
-      .setThumbnail(client.user.displayAvatarURL())
-      .setTitle('🤖 • Minhas informações!')
-      .addField('**Meu nick:**', userName, false)
-      .addField('**Meu ID:**', client.user.id, false)
-      .addField('**Servidores:**', ` ${client.guilds.cache.size}`, false)
-      .addField('**Usuários:**', `${client.users.cache.size}`, false)
-      .addField('**Estou online há:**', `${uptime}`)
-      .addField('**Criado em:**', formatDate('DD/MM/YYYY, às HH:mm:ss', date))
-      .setImage("https://top.gg/api/widget/719524114536333342.svg")
-      .setFooter(`2020 © ${client.user.username}.`)
-      .setTimestamp()
+  const botinfo = new Discord.MessageEmbed()
+  .setAuthor('Minhas Informações')
+  .setThumbnail(client.user.displayAvatarURL())
+  .setColor("#7c2ae8")
+  .addField('<:botdeveloper:756226144906510506>┃Criadores', `\`${client.users.cache.get('717766639260532826').tag}, ${client.users.cache.get('742798447253651506').tag}, ${client.users.cache.get('672652538880720896').tag}, ${client.users.cache.get('422535241211707393').tag}\``)
+  .addField(`<:staff:556680099865427978>┃Servidores`,`\`${totalGuilds}\``)
+  .addField('<:stafftools:755502350499577867>┃Canais', `\`${totalCanais}\``)
+  .addField(`<:Pandaassistindoo:743792298340646914>┃Usuários`, `\`${totalUsers}\``)
+  .addField(`<:gaming_keyboard:745980906648502382>┃Memória RAM`,`\`${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)}MB de 1024MB\``)
+  .addField(`💻┃CPU`, `\`${(process.cpuUsage().system / 1024 / 1024).toFixed(2)}% de CPU\``)
+  .addField(`<:cpu:745991204113743932>┃Processador`, `\`${modelo}\``)
+  .addField(`<:discord:743792299753865238>┃Ping`,`\`Latência do Servidor: ${ms.createdTimestamp -
+      message.createdTimestamp}ms\nLatência da API: ${Math.round(
+      client.ws.ping
+    )}ms\``)
+  .addField('<:relogio:755526912033685564>┃Tempo de Atividade', `\`${days.toFixed()} dias ${hours.toFixed()} horas ${minutes.toFixed()} minutos ${seconds.toFixed()} segundos\``)
+  .setImage('https://top.gg/api/widget/719524114536333342.png')
+  ms.edit("<:relogio:755526912033685564>┃Aguarde.");
+  await ms.edit("<:relogio:755526912033685564>┃Aguarde..");
+  await ms.edit("<:relogio:755526912033685564>┃Aguarde...");
+  await ms.edit(`${message.author}`, botinfo);
+  })
+};
 
-    if (client.user.presence.status) {
-      embed.addField(
-        '**Status**',
-        `${status[client.user.presence.status]}`,
-        inline,
-        true
-      )
-    }
-
-    message.channel.send(embed)
-  },
-
-  conf: {},
-
-  get help () {
-    return {
-      name: 'botinfo',
-      category: 'Info',
-      description: 'Mostra informações do bot.',
-      usage: 'botinfo'
-    }
-  }
-}
-/**
- * Formata a data passada para o padrão do Brasil.
- * @param {string} template
- * @param {Date=} [date]
- * @return {string}
- */
-function formatDate (template, date) {
-  var specs = 'YYYY:MM:DD:HH:mm:ss'.split(':')
-  date = new Date(date || Date.now() - new Date().getTimezoneOffset() * 6e4)
-  return date.toISOString().split(/[-:.TZ]/).reduce(function (template, item, i) {
-    return template.split(specs[i]).join(item)
-  }, template)
+exports.help = {
+    name: 'botinfo',
+    aliases: ['starinfo']
 }

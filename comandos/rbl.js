@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const db = require("../blacklist.js");
 
 exports.run = (client, message, args) => {
-    if (!['422535241211707393', '717766639260532826' , '622922897509580821', '664174201220890645'].some(a => message.author.id === a)) return message.channel.send('Apenas desenvolvedores / moderadores do bot podem utilizar este comando!')
+    if (!['422535241211707393', '717766639260532826' , '742798447253651506'].some(a => message.author.id === a)) return message.channel.send('Apenas desenvolvedores / moderadores do bot podem utilizar este comando!')
   const id = args[0]
   const user = client.users.cache.find(a => a.id === id)
   if(!id) return message.channel.send("Você precisa adicionar o ID do usuário")
@@ -24,4 +24,8 @@ exports.run = (client, message, args) => {
         return message.channel.send(erro)
       }
     })
+}
+exports.help = {
+    name: 'rbl',
+    aliases: ['starunban', 'botunban', 'bub']
 }

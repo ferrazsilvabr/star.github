@@ -1,7 +1,7 @@
 // Adapte para seu bot, isso é a base! By: Rafa
 const jimp = require("jimp")
 
-exports.run = async (client, message, args) => {
+module.exports.run = async (client, message, args) => {
         let img = jimp.read("https://cdn.discordapp.com/attachments/554048737648050179/610011657632219147/laranjo-meme-cke.jpg")
         if (!args[0]) return message.reply("Indique que o laranjo deve falar.")
         img.then(image => {
@@ -14,3 +14,7 @@ exports.run = async (client, message, args) => {
             })
         })
     }
+    exports.help = {
+    name: 'laranjo',
+    aliases: [ ]
+}

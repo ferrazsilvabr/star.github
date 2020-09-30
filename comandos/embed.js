@@ -16,5 +16,6 @@ exports.run = async (client, message, args) => {
 }
 
 exports.help = {
-    name: "embed"
+    name: "embed",
+    aliases: ['sendembed']
 }

@@ -2,7 +2,7 @@ var weather = require('weather-js');
 const Discord = require('discord.js')
 
 
-exports.run = (client, message, args) => {
+module.exports.run = (client, message, args) => {
     weather.find({
         search: args,
         degreeType: 'C'
@@ -27,9 +27,5 @@ exports.run = (client, message, args) => {
 
 exports.help = {
     name: `tempo`,
-    description: `Verifica o clima/tempo de uma cidade.`,
-    usage: `tempo <cidade>`,
-    aliases: [
-        'clima'
-    ]
+    aliases: ['clima']
 };

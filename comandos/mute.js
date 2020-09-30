@@ -1,58 +1,49 @@
-const { MessageEmbed } = require("discord.js");
+const Discord = require('discord.js');
+const ms = require('ms')
 
-module.exports = {
-  name: "mute",
-  description: "Mutar",
-  usage: "mute <@mention> <reason>",
-  run: async (client, message, args) => {
-    if (!message.member.hasPermission("MANAGE_ROLES")) {
-      return message.channel.send(
-        "**Você Não Tem Permissão Para Executar Esse Comando!**"
-      );
-    }
-
-    if (!message.guild.me.hasPermission("MANAGE_ROLES")) {
-      return message.channel.send("**Eu Não Tenho Permissão Para Gerenciar Os Cargos!**");
-    }
-
-    const user = message.mentions.members.first();
-    
-    if(!user) {
-      return message.channel.send("**Você Precisa Mencionar O Usuário Que Deseja Mutar!**")
-    }
-
-    if(user.id === message.author.id) {
-      return message.channel.send("**Você Não Pode Mutar Você Mesmo**");
-    }
-    
-    
-    let reason = args.slice(1).join(" ")
-    
-    
-    if(!reason) {
-      return message.channel.send("**Você Precisa Colocar O Motivo Do Mute!**")
-    }
-    
-  //TIME TO LET MUTED ROLE
-    
-    let muterole = message.guild.roles.cache.find(x => x.name === "StarMute")
-    
-    
-      if(!muterole) {
-      return message.channel.send("**Este Server Precisa Ter O Cargo** `StarMute`**!**")
-    }
-    
-    
-   if(user.roles.cache.has(muterole)) {
-      return message.channel.send("**O Usuário Ja Foi Mutado!**")
-    }
-    
+module.exports.run = (client, message, args) => {
   
-    
-    
-    user.roles.add(muterole)
-    
-await message.channel.send(`**Mutado:** ${message.mentions.users.first().username} **Motivo:** \`${reason}\``)
-    
+   if (!message.member.hasPermission("KICK_MEMBERS")) {
+    let ed = new Discord.MessageEmbed()
+    .setTitle('<a:nao:758652322422849536> You dont have access to that command you need permision `Kick Members`')
+    message.channel.send(ed)
+  return
+  }  
+  
+let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.cache.get(args[0]));
+  if(!tomute) return message.channel.send('<a:nao:758652322422849536> Não achei este usuário');
+  let muterole = message.guild.roles.find(`name`, "Silenciado");
+  if(!muterole) {
+    try{
+      muterole = message.guild.createRole({
+        name: "Silenciado",
+        color: "RANDOM",
+        permissions:[]
+      }) 
+      message.guild.channels.forEach(async (channel, id) => {
+        channel.overwritePermissions(muterole, {
+          SEND_MESSAGES: false,
+          ADD_REACTIONS: false,
+          READ_MESSAGES: true
+        });
+      });
+    }catch(e){
+      message.channel.send(e.stack)
+    }
   }
+  let mutetime = args[1];
+  if(!mutetime) return message.channel.send("<a:nao:758652322422849536> Defina o tempo");
+  
+  (tomute.addRole(muterole.id));
+  let emb = new Discord.MessageEmbed().setDescription((`<@${tomute.id}> foi mutado por ${ms(ms(mutetime))}`));
+  message.channel.send(emb)
+  
+  setTimeout(function(){
+    tomute.removeRole(muterole.id);
+    message.channel.send(`<@${tomute.id}> foi mutado com sucesso!`)
+  }, ms(mutetime))
 };
+exports.help = {
+    name: 'mute',
+    aliases: ['mutar', 'silenciar']
+}

@@ -1,27 +1,41 @@
-const db = require('quick.db');
-const Discord = require('discord.js');
-const c = require('../config.json');
+const autorole = require('../autorole.js')
+const Discord = require('discord.js')
+const mongoose = require('mongoose')
 
-exports.run = (client, message, args) => {
-    var infu = ('https://extremoz.rn.gov.br/wp-content/uploads/2019/10/info.png')
-      let erro = new Discord.MessageEmbed()
+module.exports.run = async (bot, message, args) => {
+  let role = message.mentions.roles.first() || message.guild.roles.cache.get(args[0])
 
-  .setTitle(`INFORMAÇÃO`)
-  .setDescription(`*Selecione o cargo que irei adicionar ao membro entrar*`)
-  .addField(`:hammer: **Uso**`, `\`${c.prefix}welcomerole <id do cargo>\``, true)
-  .addField(`:book: **Exemplo**`, `\`${c.prefix}welcomerole **ID**\``, true)
-  .addField(`:bookmark: **Permissão**`, `\`ADMINISTRATOR\``)
-  .addField(`:twisted_rightwards_arrows: **Alternativas**`, `\`${c.prefix}autorole\``)
-  .setColor('#a67dff')    
+    if(!role) {
+      return message.channel.send('Você não especificou um cargo')
+    }
 
+    if(!message.member.hasPermission('ADMINISTRATOR')) {
+      return message.channel.send('Você não tem permissão para usar este comando')
+    }
 
-    if (!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send(`🍒 **»** Olá! **${message.author.username}**, você precisa da permissão \`ADMINISTRATOR\`.`)
-    if (!args.join(" ")) return message.channel.send(erro)
-    
-    db.set(`autoRole_${message.guild.id}`, args.join(" ").trim())
- 
-    message.channel.send(`🍒 **»** Função finalizada com sucesso. Para ver toda a configuração completa, digite: \`s!painel\`.`)}
+    autorole.findOne({ GuildID: message.guild.id }, async (err, data) => {
+      if(err) console.log(err)
+      if(!data) {
+        let newRole = new autorole({
+          GuildID: message.guild.id,
+          RoleID: role.id
+        })
+        newRole.save()
+        let success = new Discord.MessageEmbed()
+        .setTitle('Autorole Criado!')
+        .setDescription(`O Cargo dado quando um usuário entrar será ${role.toString()}.`)
+        .setColor('GREEN')
+        message.channel.send(success)
+      } else {
+        let exists = new Discord.MessageEmbed()
+        .setTitle('Autorole Existente!')
+        .setDescription('Ultilize s!reset para resetar o autorole')
+        .setColor('RED')
+        message.channel.send(exists)
+      }
+    })
+}
 exports.help = {
     name: 'autorole',
-    aliases: ['welcomerole']
+    aliases: ['joinrole']
 }

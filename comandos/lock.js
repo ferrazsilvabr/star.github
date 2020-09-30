@@ -7,3 +7,7 @@ exports.run = (client, message, args) => {
  message.channel.send(`**${message.author} fechei este canal,digite \`unlock\` para desbloqueá-lo!**`);
 // De unlock só trocar no SEND_MESSAGES: false, para SEND_MESSAGES: null
  };
+ exports.help = {
+    name: 'lock',
+    aliases: ['fechar']
+}

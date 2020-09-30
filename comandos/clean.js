@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 
-exports.run = async (client, message, args) => {
+module.exports.run = async (client, message, args) => {
   if(!message.guild.me.permissions.has("MANAGE_MESSAGES")) {
     return message.reply("Eu não tenho a permissão necessária!")
   }
@@ -24,3 +24,7 @@ exports.run = async (client, message, args) => {
       console.log(`Não foi possível deletar mensagens devido a: ${error}`)
     );
 };
+exports.help = {
+    name: 'clean',
+    aliases: ['clear', 'limpar']
+}

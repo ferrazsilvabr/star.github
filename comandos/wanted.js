@@ -30,3 +30,7 @@ module.exports.run = (bot, message, args) =>
         });
     });
 };
+exports.help = {
+    name: 'wanted',
+    aliases: ['procurado']
+}

@@ -1,12 +1,7 @@
 const Discord = require("discord.js")
 const db = require("quick.db")
 
-module.exports = {
-  name: "setwelcome",
-  category: "moderation",
-  usage: "setwelcome <#channel>",
-  description: "Set the welcome channel",
-  run: (client, message, args) => {
+module.exports.run = (client, message, args) => {
     if (!message.member.permissions.has("ADMINISTRATOR"))
     return message.reply(
       "Você precisa de permissão de Admininstrador para ultilizar este comando"
@@ -24,4 +19,7 @@ module.exports = {
     
     message.channel.send(`O Canal de boas vindas agora é ${channel}`)
   }
+exports.help = {
+    name: 'welcome',
+    aliases: ['boas-vindas']
 }
